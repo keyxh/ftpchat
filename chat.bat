@@ -38,21 +38,27 @@ start/B folder\LIB\gray.exe
 color f2
 set bb=1.0.6
 title ftpchat_%BB%
-set log=folder\log\chat.log
+set sj=%random%/327
+set log1=folder\log\chat.bat\
+if not exist "%log1%" (md %log1%)
+set log=folder\log\chat.bat\%date:~0,4%%date:~5,2%%date:~8,2%.log
+echo %time%:log service and chat.bat started .... >> %LOG%
 REM 连接服务器
 @mode con lines=45 cols=100
 ping /n 5 119.6.50.218 > nul
-if errorlevel 1 (echo cannot contact to server >>%LOG% & goto debug1) else echo contact to 119.6.50.218 succeed >> %log%
-if not exist "folder\user\id.txt" (echo cannot found id.txt>>%LOG% & start setup.bat & exit) else echo found id.txt >>%LOG% & set/p id=<folder\user\id.txt
+if errorlevel 1 (echo [%TIME%]cannot contact to server >>%LOG% & goto debug1) else echo [%TIME%]contact to 119.6.50.218 succeed >> %log%
+if not exist "folder\user\id.txt" (taskkill /im gray.exe /F &echo [%TIME%]cannot found id.txt AND EXIT >>%LOG% & start setup.bat & exit) else echo found id.txt >>%LOG% & set/p id=<folder\user\id.txt
 start chatroom.bat & goto chat
 :chat
-if exist "folder\tmp\chatexit.txt" (taskkill /im gray.exe /F & del folder\tmp\chatexit.txt & exit)
+if exist "folder\tmp\chatexit.txt" (taskkill /im gray.exe /F & del folder\tmp\chatexit.txt & echo [%TIME%]exit and log end >>%LOG% & exit)
 if exist "folder\download\chatroom.txt" (del folder\download\chatroom.txt)
 set path1=folder\download\
 set url1=ftp://119.6.50.218:11061/ftpchat/chatroom/chatroom.txt
+ECHO [%time%]:GET PATH1=%PATH1% >> %log%
+ECHO [%time%]:GET URL1=%URL1% >>%log%
 folder\lib\wget -q -c -P %path1% %url1%
 cls
-if exist "folder\download\chatroom.txt" (type folder\download\chatroom.txt & type folder\download\chatroom.txt >> %log%) 
+if exist "folder\download\chatroom.txt" (type folder\download\chatroom.txt & echo [%time%]:type chatroom.txt >> %log% & type folder\download\chatroom.txt >> %log% & echo end >>%log%) else echo [%time%]:CANNOT found CHATROOM >> %log%
 echo.
 ping/n 5 127.0.0.1 > NUL
 goto chat
