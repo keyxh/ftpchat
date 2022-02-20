@@ -36,7 +36,7 @@ cd/d %~dp0
 if exist "chatexit.txt" (del chatexit.txt)
 start/B folder\LIB\gray.exe
 color f2
-set bb=1.0.6
+set bb=1.0.7
 title ftpchat_%BB%
 set sj=%random%/327
 set log1=folder\log\chat.bat\
@@ -60,7 +60,7 @@ folder\lib\wget -q -c -P %path1% %url1%
 cls
 if exist "folder\download\chatroom.txt" (type folder\download\chatroom.txt & echo [%time%]:type chatroom.txt >> %log% & type folder\download\chatroom.txt >> %log% & echo end >>%log%) else echo [%time%]:CANNOT found CHATROOM >> %log%
 echo.
-ping/n 5 127.0.0.1 > NUL
+ping/n 2 127.0.0.1 > NUL
 goto chat
 
 
