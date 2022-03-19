@@ -36,31 +36,34 @@ cd/d %~dp0
 if exist "chatexit.txt" (del chatexit.txt)
 start/B folder\LIB\gray.exe
 color f2
-set bb=1.0.7
-title ftpchat_%BB%
+set bb=1.6.7
+title ftpchat_%BB%--接收
 set sj=%random%/327
 set log1=folder\log\chat.bat\
 if not exist "%log1%" (md %log1%)
 set log=folder\log\chat.bat\%date:~0,4%%date:~5,2%%date:~8,2%.log
 echo %time%:log service and chat.bat started .... >> %LOG%
 REM 连接服务器
-@mode con lines=45 cols=100
-ping /n 5 119.6.50.218 > nul
+@mode con lines=40 cols=70
+ping /n 3 119.6.50.218 > nul
 if errorlevel 1 (echo [%TIME%]cannot contact to server >>%LOG% & goto debug1) else echo [%TIME%]contact to 119.6.50.218 succeed >> %log%
+set path1=folder\download\
+set url2=ftp://119.6.50.218:11061/ftpchat/chatroom/rs.txt
 if not exist "folder\user\id.txt" (taskkill /im gray.exe /F &echo [%TIME%]cannot found id.txt AND EXIT >>%LOG% & start setup.bat & exit) else echo found id.txt >>%LOG% & set/p id=<folder\user\id.txt
 start chatroom.bat & goto chat
 :chat
+if "%md5b%"=="" (set md5b=0000)
 if exist "folder\tmp\chatexit.txt" (taskkill /im gray.exe /F & del folder\tmp\chatexit.txt & echo [%TIME%]exit and log end >>%LOG% & exit)
 if exist "folder\download\chatroom.txt" (del folder\download\chatroom.txt)
-set path1=folder\download\
 set url1=ftp://119.6.50.218:11061/ftpchat/chatroom/chatroom.txt
 ECHO [%time%]:GET PATH1=%PATH1% >> %log%
 ECHO [%time%]:GET URL1=%URL1% >>%log%
 folder\lib\wget -q -c -P %path1% %url1%
-cls
-if exist "folder\download\chatroom.txt" (type folder\download\chatroom.txt & echo [%time%]:type chatroom.txt >> %log% & type folder\download\chatroom.txt >> %log% & echo end >>%log%) else echo [%time%]:CANNOT found CHATROOM >> %log%
-echo.
-ping/n 2 127.0.0.1 > NUL
+for /f %%a in ('folder\lib\md5sum.exe folder\download\chatroom.txt') do set md5a=%%a  
+echo [%time%]:get md5a=%md5a% >>%log%
+echo [%time%]:get md5b=%md5b% >>%log%
+if "%md5a%"=="%md5b%" (goto chat) else set md5b=%md5a%
+if exist "folder\download\chatroom.txt" (echo [%time%]:type new things >> %LOG% & type folder\download\chatroom.txt)
 goto chat
 
 

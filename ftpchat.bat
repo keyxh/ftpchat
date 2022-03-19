@@ -181,7 +181,8 @@ set /a X=%P:~0,-3%
 set /a Y=%P%-1000*%X%
 echo x=%x% > nul
 echo y=%y% >> nul
-
+:end
+exit
 
 
 
